@@ -6,10 +6,10 @@ This code has been developed to investigate the prevalence and dynamics of mutat
 
 ## Table of contents
 
-### **/data**
+## **/data**
 Contains relevant data files.
 
-### **/code**
+## **/code**
 Contains the code employed in the analysis:
 
 **MutationalSignatureAnalysis:**  
@@ -24,11 +24,12 @@ Script employed to link signatures with genomic markers and pathway activities.
 **ModellingDiseaseStages:**  
 Scripts employed for the gradient boost and multinomial regression classifiers of disease stages based on mutational signatures.
 
-**DDRsignatures:**  			
+**DDRsignatures:**  
 NMF methodology to infer pathway-level signatures of mutations across DDR processes.
 
 **SignaturePrognosis:**  
 Scripts employed to investigate the relation between mutational signatures and clinical outcomes.
+
 
 ## System Requirements
 Operating system(s): Unix (linux, mac)
