@@ -2,7 +2,7 @@
 
 ## Description
 
-This code has been develop to investigate the prevalence and dynamics of mutational signatures across Barrett Oesophagus, primary tumours and metastases is oesophageal adenocarcinoma.
+This code has been developed to investigate the prevalence and dynamics of mutational signatures across Barrett Oesophagus, primary tumours and metastases is oesophageal adenocarcinoma.
 
 ## Table of contents
 
