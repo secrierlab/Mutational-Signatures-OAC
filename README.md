@@ -1,6 +1,10 @@
 # Mutational signature dynamics across the disease course in oesophageal adenocarcinoma
 
-# Table of contents
+## Description
+
+This code has been develop to investigate the prevalence and dynamics of mutational signatures across Barrett Oesophagus, primary tumours and metastases is oesophageal adenocarcinoma.
+
+## Table of contents
 
 ## System Requirements
 Operating system(s): Unix (linux, mac)
