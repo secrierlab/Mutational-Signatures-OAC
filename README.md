@@ -4,30 +4,29 @@
 
 This code has been developed to investigate the prevalence and dynamics of mutational signatures across Barrett Oesophagus, primary tumours and metastases is oesophageal adenocarcinoma.
 
-## Table of contents
+## Data
 
-## **/data**
-Contains relevant data files.
+The data employed for this analysis can be found in the **/data** folder or is available upon request.
 
-## **/code**
-Contains the code employed in the analysis:
+## Code
+The scripts employed in this analysis can be found in the **/code** folder as follows:
 
-**MutationalSignatureAnalysis:**  
+-**MutationalSignatureAnalysis:**  
 Scripts for the inference of mutational signatures and their clonality.
 
-**PositiveSelectionAnalysis:**  
+-**PositiveSelectionAnalysis:**  
 Positive selection analysis using the dndscv method for defined subgroups of the cohort.
 
-**GenomicAssociations:**  
+-**GenomicAssociations:**  
 Script employed to link signatures with genomic markers and pathway activities.
 
-**ModellingDiseaseStages:**  
+-**ModellingDiseaseStages:**  
 Scripts employed for the gradient boost and multinomial regression classifiers of disease stages based on mutational signatures.
 
-**DDRsignatures:**  
+-**DDRsignatures:**  
 NMF methodology to infer pathway-level signatures of mutations across DDR processes.
 
-**SignaturePrognosis:**  
+-**SignaturePrognosis:**  
 Scripts employed to investigate the relation between mutational signatures and clinical outcomes.
 
 
