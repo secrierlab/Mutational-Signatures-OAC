@@ -1,0 +1,75 @@
+THIS FILE CONTAINS THE METADATA ABOUT SYSTEM AND RUNTIME
+
+
+-------System Info-------
+Operating System Name: Linux
+Nodename: node-h00a-012.myriad.ucl.ac.uk
+Release: 3.10.0-1127.el7.x86_64
+Version: #1 SMP Tue Feb 18 16:39:12 EST 2020
+
+-------Python and Package Versions------- 
+Python Version: 3.7.4
+Sigproextractor Version: 1.0.20
+SigprofilerPlotting Version: 1.1.8
+SigprofilerMatrixGenerator Version: 1.1.23
+Pandas version: 1.1.4
+Numpy version: 1.19.4
+Scipy version: 1.5.4
+Scikit-learn version: 0.23.2
+
+--------------EXECUTION PARAMETERS--------------
+INPUT DATA
+	input_type: matrix
+	output: sigextractor_output_2
+	input_data: matrix.output.all.SBS96.all
+	reference_genome: GRCh37
+	context_types: SBS96
+	exome: False
+NMF REPLICATES
+	minimum_signatures: 14
+	maximum_signatures: 25
+	NMF_replicates: 500
+NMF ENGINE
+	NMF_init: random
+	precision: single
+	matrix_normalization: gmm
+	resample: True
+	seeds: random
+	min_NMF_iterations: 10,000
+	max_NMF_iterations: 1,000,000
+	NMF_test_conv: 10,000
+	NMF_tolerance: 1e-15
+CLUSTERING
+	clustering_distance: cosine
+EXECUTION
+	cpu: 36; Maximum number of CPU is 36
+	gpu: False
+Solution Estimation
+	stability: 0.8
+	min_stability: 0.2
+	combined_stability: 1.0
+COSMIC MATCH
+	opportunity_genome: GRCh37
+	nnls_add_penalty: 0.05
+	nnls_remove_penalty: 0.01
+	initial_remove_penalty: 0.05
+	de_novo_fit_penalty: 0.02
+	refit_denovo_signatures: True
+
+-------Analysis Progress------- 
+[2020-12-06 22:24:36] Analysis started: 
+
+##################################
+
+[2020-12-06 22:24:37] Analysis started for SBS96. Matrix size [96 rows x 956 columns]
+
+[2020-12-06 22:24:37] Normalization GMM with cutoff value set at 51807
+
+[2020-12-07 10:07:50] SBS96 de novo extraction completed for a total of 14 signatures! 
+Execution time:11:43:13
+
+[2020-12-08 00:16:35] SBS96 de novo extraction completed for a total of 15 signatures! 
+Execution time:14:08:45
+
+[2020-12-08 16:32:54] SBS96 de novo extraction completed for a total of 16 signatures! 
+Execution time:16:16:18
