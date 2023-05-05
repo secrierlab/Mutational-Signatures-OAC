@@ -4,6 +4,25 @@
 
 This code has been developed to investigate the prevalence and dynamics of mutational signatures across Barrett Oesophagus, primary tumours and metastases is oesophageal adenocarcinoma.
 
+## System Requirements
+Operating system(s): Unix (Linux, Mac OS)
+Programming Language: R 4.1.2
+
+Package versions utilised:
+SigProfilerExtractor
+Sigminer
+desconstructSigs
+MutationalPatterns 
+MutationTimer 
+dNdScv 
+xgboost
+randomForest
+glmnet 
+
+## Installation guide
+Make sure you are running R version 4.1.2 or above, and install the required package dependencies as indicated in the System Requirements section above.
+Typical install time on a "normal" desktop computer: negligible, mostly reliant on dependent packages.
+
 ## Data
 
 The data employed for this analysis can be found in the **/data** folder or is available upon request.
@@ -29,10 +48,10 @@ NMF methodology to infer pathway-level signatures of mutations across DDR proces
 -**SignaturePrognosis:**  
 Scripts employed to investigate the relation between mutational signatures and clinical outcomes.
 
+## Demo / Instructions for use
 
-## System Requirements
-Operating system(s): Unix (linux, mac)
-Programming Language: R
+To run a particular script, navigate to the corresponding folder and run the script using the command *Rscript name_of_script.R*. Outputs include results of statistical tests, plots and newly generated result files.
+Expected run times: Most scripts should run instantaneously, except for the MutationTimer analysis that will depend on the size of your input dataset. The mutation signature-based classifiers can take 2-5 minutes to run on average.
 
 # Copyright
 This code is free and is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY. See the GNU General Public License for more details.
