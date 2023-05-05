@@ -10,23 +10,19 @@ Programming Language: R 4.1.2
 
 Package versions utilised:
 
-SigProfilerExtractor
+desconstructSigs v1.9.0
 
-Sigminer
+MutationalPatterns v3.10.0
 
-desconstructSigs
+MutationTimer v1.00.0 
 
-MutationalPatterns 
+dNdScv v0.1.0 
 
-MutationTimer 
+xgboost v1.7.3.1
 
-dNdScv 
+randomForest v4.7-1.1
 
-xgboost
-
-randomForest
-
-glmnet 
+glmnet v4.1-7
 
 ## Installation guide
 Make sure you are running R version 4.1.2 or above, and install the required package dependencies as indicated in the System Requirements section above.
