@@ -36,13 +36,13 @@ The data employed for this analysis can be found in the **/data** folder, the So
 ## Code
 The scripts employed in this analysis can be found in the **/code** folder.
 
--**MutationalSignatureAnalysis:**  
+### **MutationalSignatureAnalysis:**  
 Scripts for the inference of mutational signatures and their clonality.
 
--**PositiveSelectionAnalysis:**  
+### **PositiveSelectionAnalysis:**  
 Positive selection analysis using the dndscv method for defined subgroups of the cohort.
 
--**AllOtherAnalyses:**  
+### **AllOtherAnalyses:**  
 Script employed to generate the results and figures presented in the paper, numbered according to the figures in the corresponding paper. They include the following analyses:
 
 **Linking signatures with genomic markers and pathway activities:**
