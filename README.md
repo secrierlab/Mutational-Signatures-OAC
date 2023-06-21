@@ -116,8 +116,10 @@ Expected run times:
 Most scripts should run instantaneously, except for the MutationTimer analysis that will depend on the size of your input dataset. The mutation signature-based classifiers can take 2-5 minutes to run on average.
 
 # Publication
+
 This code has been generated for the following publication: 
-**Mutational signature dynamics shaping the evolution of oesophageal adenocarcinoma.** Sujath Abbas, Oriol Pich, Ginny Devonshire, Shawn A. Zamani, Annalise Katz-Summercorn, Sarah Killcoyne, Calvin Cheah, Barbara Nutzinger, Nicola Grehan, Nuria Lopez-Bigas, OCCAMS Consortium, Rebecca C. Fitzgerald*, Maria Secrier* 
+
+**Mutational signature dynamics shaping the evolution of oesophageal adenocarcinoma.** (2023) Sujath Abbas, Oriol Pich, Ginny Devonshire, Shawn A. Zamani, Annalise Katz-Summercorn, Sarah Killcoyne, Calvin Cheah, Barbara Nutzinger, Nicola Grehan, Nuria Lopez-Bigas, OCCAMS Consortium, Rebecca C. Fitzgerald*, Maria Secrier* 
 
 
 # Copyright
