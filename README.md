@@ -46,38 +46,67 @@ Positive selection analysis using the dndscv method for defined subgroups of the
 Script employed to generate the results and figures presented in the paper, numbered according to the figures in the corresponding paper. They include the following analyses:
 
 **Linking signatures with genomic markers and pathway activities:**
+
 2_compareSignaturesStages.R
+
 4_oncoprintDrivers_sigcutoff05.R
+
 6_CINandS17.R
+
 6_analyseClonality.tracksig.R
+
 6_signaturePresenceCorrWithProgrammes.R
+
 s1_TMB.R
+
 s21_upsetPlots.R
+
 s22-23_PIK3CA_KRAS_APC.R
+
 s24_clonalityPurity.R
+
 s27_signature17.R
+
 s3_compareSignaturesStages_indels.R
 
+
 **Gradient boost and multinomial regression classifiers of disease stages based on mutational signatures:**
+
 3_multipleLinearReg-oct2021.R
+
 3_xgboost_withcv_april2022.R
+
 s25_xgboost_withcv_jan2023_plusindels.R
+
 s26_final_xgboostsimpleWithClonality_primvsmets.R
 
+
 **DDR process analyses:**
+
 5_ddr.snvs.2023.R
+
 5_genericDDRpatterns.R
+
 7_SBS30_BER.R
+
 s4-5_MMRandImmunity.R
 
+
 **Investigating the relation between mutational signatures and clinical outcomes:**
+
 7_linkTreatmentResponse.R
+
 s14_produceClinicalPlot.R
+
 s15-19_clinicalAssociations_smoking.R
+
 s6_barretts_heterogeneity.R
 
+
 **Strelka vs Mutect comparison:**
+
 s29_mutectVSStrelka.R
+
 
 ## Demo / Instructions for use
 
