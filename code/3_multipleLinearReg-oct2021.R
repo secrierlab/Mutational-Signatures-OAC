@@ -9,7 +9,7 @@ library(cowplot)
 library(reshape)
 
 # Load timed mutational signature data:
-load("processeddata/sigs.timed.annot.RData")
+load("data/sigs.timed.annot.RData")
 sigs.timed.annot[which(sigs.timed.annot$Category == "LymphNode"),]$Category <- "Metastasis"
 df.sigs.timed <- melt(sigs.timed.annot)
 #df.sigs.timed[which(df.sigs.timed$Category == "LymphNode"),]$Category <- "Metastasis"
@@ -116,10 +116,18 @@ p.truth <- list()
 i <- 0 
 for (r in featuresToKeep){#glm.fit$coefnames) {
   i <- i+1
+  # p.pred.current <- ggplot(bpp2, aes_string(x = r, y = "Probability", colour = "Prediction")) +
+  #   geom_line() + facet_grid(Prediction ~ ., scales="free")+
+  #   ylim(c(0,1))+
+  #   ylab("Probability")
   p.pred.current <- ggplot(bpp2, aes_string(x = r, y = "Probability", colour = "Prediction")) +
-    geom_line() + facet_grid(Prediction ~ ., scales="free")+
+    geom_point(size=1) + 
+    geom_smooth(method="loess",se=TRUE)+
+    scale_color_manual(values=c("#6ba393", "#e8b44d","#94788c"))+
+    facet_grid(Prediction ~ ., scales="free")+
     ylim(c(0,1))+
-    ylab("Probability")
+    ylab("Probability")+
+    theme(legend.position = "none") # no legend
   p.truth.current <- ggplot(bpp.truth,aes_string(x=r,y="Category"))+
     geom_boxplot(width=5)+
     geom_point(size=2, alpha=0.5)+
@@ -128,14 +136,14 @@ for (r in featuresToKeep){#glm.fit$coefnames) {
   p.pred[[i]] <- p.pred.current
   p.truth[[i]] <- p.truth.current
   
-  pdf(paste0("plots.multinom.april2022/noclontim_",r,"predictedCategory.pdf"))
+  pdf(paste0("plots.multinom.june2022/noclontim_",r,"predictedCategory.pdf"))
   print(plot_grid(p.pred.current,p.truth.current,nrow=2,align="hv", axis="l",
                   rel_heights = c(1,0.2)))
   dev.off()
 }
 
 
-pdf(paste0("plots.multinom.april2022/multinom.selected.together.pdf"),w=10,h=6)
+pdf(paste0("plots.multinom.june2022/multinom.selected.together.pdf"),w=10,h=6)
 print(plot_grid(p.pred[[11]],p.pred[[10]],p.truth[[11]],p.truth[[10]],
                 nrow=2,align="hv", axis="l",
                 rel_heights = c(1,0.2)))
@@ -145,3 +153,4 @@ shap_values=predict(glm.fit, dat.test, predcontrib = TRUE, approxcontrib = F)
 
 bpp.truth$Category == bpp2$Category
 
+write.csv(bpp2, file="plots_3/bpp2.csv")

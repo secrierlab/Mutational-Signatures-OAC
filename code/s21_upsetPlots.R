@@ -8,10 +8,10 @@ library(glmnet)
 library(cowplot)
 
 # Load mutational signature data:
-load("../SigProfiler/sigs.allSamples.normalised.202101127_cosmicref13sig_S3S8.RData")
+load("../../SigProfiler/sigs.allSamples.normalised.202101127_cosmicref13sig_S3S8.RData")
 
 # Load annotation of samples:
-load("processeddata/annotation.sampleIDs.RData")
+load("data/annotation.sampleIDs.RData")
 
 ## Merge signatures and IDs:
 
@@ -63,6 +63,7 @@ pdf("plots.upset/upset.altogether.pdf", w=12)
 plot_grid(as.grob(g2), as.grob(g1), as.grob(g3))
 dev.off()
 
+write.csv(sigs.norm.annot, file="plots_supp/sigs.norm.annot.csv")
 
 ## This one does not seem to work:
 pdf("plots.upset/upset.oneplotByGroup.pdf",h=5,onefile=FALSE)

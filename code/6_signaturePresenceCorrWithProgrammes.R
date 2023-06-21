@@ -4,7 +4,7 @@
 library(reshape)
 
 ## Catalogue cases with increase at bottleneck vs decrease at bottleneck:
-load("processeddata/sigs.allSamples.normalised.202101127_cosmicref13sig_S3S8.RData")
+load("data/sigs.allSamples.normalised.202101127_cosmicref13sig_S3S8.RData")
 
 sigs.allSamples$Sample <- sapply(rownames(sigs.allSamples), 
                                  function(x) strsplit(x,"_vs_")[[1]][1])
@@ -16,17 +16,19 @@ table(df.sigs[,c("Signature","ExposureBinary")])
 
 
 # Next, load expression data and map against genomic changes:
-load("../tracksig_barrettsmetsprimaries/oac.expr.final.RData")
-load("../tracksig_barrettsmetsprimaries/mat.expr.RData")
+load("../../tracksig_barrettsmetsprimaries/oac.expr.final.RData")
+load("../../tracksig_barrettsmetsprimaries/mat.expr.RData")
 
-cbioportal_invasion <- read.table("cbioportal_invasionmetastasis.txt",
+cbioportal_invasion <- read.table("../cbioportal_invasionmetastasis.txt",
                                   header=FALSE, stringsAsFactors = FALSE)$V1
 
 rownames(mat.expr) <- mat.expr$DNAid 
 mat.expr <- mat.expr[,-1]
 
+library(gdata)
+
 ## Next, read all cbioportal programmes:
-cbio <- read.xls("cbioportal_AllProgrammes.xlsx")
+cbio <- read.xls("../cbioportal_AllProgrammes.xlsx")
 cbiolist <- NULL
 i<-0
 for (c in colnames(cbio)) {
@@ -55,13 +57,13 @@ df.sigs.plusdeconv <- merge(df.sigs,
                             all.x=FALSE, all.y=FALSE)
 
 ### Now try hallmarks of cancer from CancerSEA:
-emt <- read.table("EMT.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-hypoxia <- read.table("Hypoxia.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-metastasis <- read.table("Metastasis.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-inflammation <- read.table("Inflammation.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-invasion <- read.table("Invasion.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-angiogenesis <- read.table("Angiogenesis.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
-stemness <- read.table("Stemness.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+emt <- read.table("../EMT.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+hypoxia <- read.table("../Hypoxia.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+metastasis <- read.table("../Metastasis.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+inflammation <- read.table("../Inflammation.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+invasion <- read.table("../Invasion.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+angiogenesis <- read.table("../Angiogenesis.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
+stemness <- read.table("../Stemness.txt", header=TRUE, stringsAsFactors = FALSE)$GeneName
 
 hallmarks <- "NULL"
 hallmarks <- list(metastasis, invasion, emt, inflammation,cbioportal_invasion,
@@ -112,7 +114,7 @@ for (s in unique(df.sigs$Signature)) {
   
   ### Plot immune infiltrates compared:
   my_comparisons <- list(c("yes","no"))
-  pdf(paste0("plots.signatureCorrs/",s,".TMEcompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".TMEcompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.immune, 
            x = "ExposureBinary", y = "value",
            palette ="npg",
@@ -127,7 +129,7 @@ for (s in unique(df.sigs$Signature)) {
   dev.off()
   
   ### Plot hallmarks compared:
-  pdf(paste0("plots.signatureCorrs/",s,".HallmarksCompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".HallmarksCompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.hallmark, 
            x = "ExposureBinary", y = "value",
            palette ="npg",
@@ -153,7 +155,7 @@ for (s in unique(df.sigs$Signature)) {
   
   ### Plot immune infiltrates compared:
   my_comparisons <- list(c("yes","no"))
-  pdf(paste0("plots.signatureCorrs/",s,".CBIOcompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".CBIOcompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.cbio, 
                  x = "ExposureBinary", y = "value",
                  palette ="npg",
@@ -162,13 +164,13 @@ for (s in unique(df.sigs$Signature)) {
           facet_wrap(~variable, scale="free")+
           theme(axis.text.x=element_blank(),
                 axis.ticks.x = element_blank())+
-          stat_compare_means(comparisons = my_comparisons, label = "p.signif")+
+          stat_compare_means(comparisons = my_comparisons)+
           xlab("")+
           ylab("Activity score"))
   dev.off()
   
   ## Plot also correlations:
-  pdf(paste0("plots.signatureCorrs/",s,".CBIOscatter.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".CBIOscatter.gsva.pdf"),w=10,h=8)
   print(ggscatter(df.melt.selected.cbio, x = "Exposure", y = "value",
                   color = "variable", shape = 21, size = 3, # Points color, shape and size
                   add = "reg.line",  # Add regressin line
@@ -183,3 +185,7 @@ for (s in unique(df.sigs$Signature)) {
   
 }
 
+write.csv(df.melt.selected.cbio[which(df.melt.selected.cbio$variable
+                                      %in% c("DDR","TelomereMaintenance",
+                                             "Angiogenesis","CellCycleControl")),], 
+          file="plots_6/sbs17b.cbiohallmarks.csv")

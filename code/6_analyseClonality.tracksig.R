@@ -5,8 +5,8 @@ library(reshape)
 library(ggpubr)
 
 # Load clonality reconstruction from TrackSig and annotation:
-load("processeddata/oac.sigClonality.final.may2021.RData")
-load("processeddata/annotation.sampleIDs.RData")
+load("data/oac.sigClonality.final.may2021.RData")
+load("data/annotation.sampleIDs.RData")
 
 oac.sigClonality.annot <- merge(oac.sigClonality.final,
                                 annotation.sampleIDs,
@@ -24,8 +24,6 @@ oac.sigClonality.annot[which(oac.sigClonality.annot$Sample %in%
 
 # Change LN to mets:
 oac.sigClonality.annot[which(oac.sigClonality.annot$Category == "LymphNode"),]$Category <- "Metastasis"
-
-save(oac.sigClonality.annot, file="processeddata/oac.sigClonality.tracksig.annot.may2021.RData")
 
 sigclon.melt <- melt(oac.sigClonality.annot,
                      id.vars = c("Sample","TumourID","OCCAMS_ID",
@@ -56,7 +54,7 @@ sigclon.melt$Signature <- factor(sigclon.melt$Signature,
                                           "SBS5",
                                           "SBS40",
                                           "SBS41"))
-pdf("plots.tracksig/clonalPrevalence.primbarmet.pdf",w=20,h=8)
+pdf("plots_6/clonalPrevalence.primbarmet.pdf",w=20,h=8)
 ggviolin(sigclon.melt[which(sigclon.melt$CCF==1),], 
           x = "Category", y = "Exposure",
           fill = "Category", palette = colorschemeoac,
@@ -67,7 +65,7 @@ ggviolin(sigclon.melt[which(sigclon.melt$CCF==1),],
 dev.off()
 
 
-pdf("plots.tracksig/subclonalPrevalence.primbarmet.pdf",w=20,h=8)
+pdf("plots_6/subclonalPrevalence.primbarmet.pdf",w=20,h=8)
 ggviolin(sigclon.melt[which(sigclon.melt$CCF!=1),], 
          x = "Category", y = "Exposure",
          fill = "Category", palette =colorschemeoac,
@@ -83,7 +81,7 @@ sigclon.melt$Clonality <- sapply(sigclon.melt$CCF,
                                  function(x) ifelse(x==1,"Clonal","Subclonal"))
 
 my_comparisons2 <- list(c("Clonal","Subclonal"))
-pdf("plots.tracksig/clonalVsSubclonal.all.pdf",w=12,h=8)
+pdf("plots_6/clonalVsSubclonal.all.pdf",w=12,h=8)
 ggviolin(sigclon.melt, 
          x = "Clonality", y = "Exposure",
          fill = "Clonality", palette =c("#D7BBA8", "#9F4A54"),
@@ -124,77 +122,6 @@ geom_split_violin <- function(mapping = NULL, data = NULL, stat = "ydensity", po
         params = list(trim = trim, scale = scale, draw_quantiles = draw_quantiles, na.rm = na.rm, ...))
 }
 
-pdf("plots.tracksig/clonalVsSubclonal.all.splitviolin.pdf",w=20,h=10)
-ggplot(sigclon.melt, aes(Category, Exposure, 
-                         fill = factor(Clonality))) + 
-  geom_split_violin()+
-  scale_fill_manual(values=c( "#9F4A54","#D7BBA8"))+
-  theme(axis.line = element_line(color="white"),
-        panel.background = element_rect(fill = "NA"))+  
-  stat_compare_means(comparisons = my_comparisons)+ # Add pairwise comparisons p-value
-  #stat_compare_means(label.y = 1) +
-  facet_wrap(~Signature,scale="free",nrow=2)
-dev.off()
-
-
-pdf("plots.tracksig/clonalVsSubclonal.primbarmet.pdf",h=24,w=12)
-ggviolin(sigclon.melt, 
-         x = "Clonality", y = "Exposure",
-         fill = "Clonality", palette =c("#D7BBA8", "#9F4A54"),
-         add = "boxplot", add.params = list(fill = "white"))+
-  stat_compare_means(comparisons = my_comparisons2)+ # Add pairwise comparisons p-value
-  #stat_compare_means(label.y = 1) +
-  facet_grid(vars(Signature),vars(Category),scale="free")
-dev.off()
-
-### all in one pdf:
-sigclon.melt$Clonality <- factor(sigclon.melt$Clonality,
-                                 levels=c("Clonal","Subclonal"))
-pdf("plots.tracksig/clonalVsSubclonal.primbarmet.individualsigs.pdf",h=6,w=10)
-for (s in unique(sigclon.melt$Signature)) {
-  print(ggviolin(sigclon.melt[which(sigclon.melt$Signature == s),], 
-           x = "Clonality", y = "Exposure",
-           fill = "Clonality", palette =c("#9F4A54","#D7BBA8"),
-           add = "boxplot", add.params = list(fill = "white"))+
-    stat_compare_means(comparisons = my_comparisons2,label = "p.signif")+ # Add pairwise comparisons p-value
-    #stat_compare_means(label.y = 1) +
-    facet_grid(vars(Signature),vars(Category),scale="free"))+
-    labs(s)
-}
-dev.off()
-
-
-### Next, choose only cases with matched Barrett's and primaries:
-matched.bp <- unique(sigclon.melt[which(sigclon.melt$Category %in% c("Barretts","PrimaryTumour")),c("OCCAMS_ID","Category","Sample")])
-matched.bp.occams <- names(which(table(matched.bp$OCCAMS_ID)==2))
-
-sigclon.melt.MatchBP <- sigclon.melt[which((sigclon.melt$OCCAMS_ID %in% matched.bp.occams)&
-                                             (sigclon.melt$Category %in% c("Barretts","PrimaryTumour"))),]
-
-# Next, compare changes in tumour compared to respective adjacent Barrett's:
-my_comparisonsBP <- list(c("Barretts","PrimaryTumour"))
-
-pdf("plots.tracksig/clonalsubclonalChanges.matchedBarretPrim.pdf",w=6,h=24)
-ggviolin(sigclon.melt.MatchBP, 
-         x = "Category", y = "Exposure",
-         fill = "Category", palette = colorschemeoac[1:2],
-         add = "boxplot", add.params = list(fill = "white"))+
-  stat_compare_means(comparisons = my_comparisonsBP,label = "p.signif")+ # Add pairwise comparisons p-value
-  #stat_compare_means(label.y = 1) +
-  facet_grid(Signature~Clonality,scale="free")
-dev.off()
-
-pdf("plots.tracksig/clonalsubclonalChanges.matchedBarretPrim.significant.pdf",w=6,h=12)
-ggviolin(sigclon.melt.MatchBP[which(sigclon.melt.MatchBP$Signature
-                                    %in% c("SBS2","SBS3","SBS18","SBS1","SBS5","SBS40")),], 
-         x = "Category", y = "Exposure",
-         fill = "Category", palette = colorschemeoac[1:2],
-         add = "boxplot", add.params = list(fill = "white"))+
-  stat_compare_means(comparisons = my_comparisonsBP,label = "p.signif")+ # Add pairwise comparisons p-value
-  #stat_compare_means(label.y = 1) +
-  facet_grid(Signature~Clonality,scale="free")
-dev.off()
-
 
 ####### Bottlenecks:
 bottles <- NULL
@@ -213,7 +140,7 @@ colnames(df.bottles) <- c("Sample","Category","Signature","Change")
 
 library(pheatmap)
 bottles <- unique(bottles)
-pdf("plots.tracksig/heatmap.bottlenecks.pdf",w=8,h=4)
+pdf("plots_6/heatmap.bottlenecks.pdf",w=8,h=4)
 annotc <- data.frame(XX=0,Category=bottles$`current.oac$Category`)
 annotc$Category <- factor(annotc$Category)
 rownames(annotc) <- bottles$sample
@@ -243,17 +170,19 @@ df.bottles$Signature <- factor(df.bottles$Signature,
                               "SBS5",
                               "SBS40",
                               "SBS41"))
-save(df.bottles,file="processeddata/df.bottles.tracksig.may2021.RData")
-save(bottles,file="processeddata/bottles.tracksig.may2021.RData")
+load("data/df.bottles.tracksig.may2021.RData")
+load("data/bottles.tracksig.may2021.RData")
 
 # Changes during bottleneck:
-pdf("plots.tracksig/bottleneck.change.pdf",w=10,h=6)
+pdf("plots_6/bottleneck.change.pdf",w=10,h=6)
 ggboxplot(df.bottles, x = "Signature", y = "Change",
           color = "Category", palette = colorschemeoac)+
   geom_hline(yintercept=0, linetype="dotted", 
              color = "black", size=0.7)
   #facet_wrap(~Signature,nrow=3)
 dev.off()
+
+write.csv(unique(df.bottles), file="plots_6/df.bottles.csv")
 
 
 ##########################################
@@ -262,9 +191,9 @@ dev.off()
 df.bottles$Direction <- sapply(df.bottles$Change, function(x)
   ifelse(x<0,"Decrease",ifelse(x>0,"Increase","NoChange")))
 
-load("df.expr.hallmark.RData")
-load("df.expr.celldeconv.RData")
-load("df.expr.cbio.RData")
+load("../df.expr.hallmark.RData")
+load("../df.expr.celldeconv.RData")
+load("../df.expr.cbio.RData")
 df.bottles$TumourID <- sapply(df.bottles$Sample, function(x) strsplit(x,"_vs_")[[1]][1])
 
 df.sigs.plusdeconv <- merge(df.bottles[which(df.bottles$Category == "PrimaryTumour"),],
@@ -280,8 +209,8 @@ df.sigs.pluscbio <- merge(df.bottles[which(df.bottles$Category == "PrimaryTumour
                               by.x="TumourID",by.y="Sample",
                               all.x=FALSE, all.y=FALSE)
 
-### Iterate for each signature
-for (s in unique(df.bottles$Signature)) {
+### Run for SBS17b:
+s="SBS17b"
   df.sigs.plusdeconv.selected <- df.sigs.plusdeconv[which(df.sigs.plusdeconv$Signature == s),]
   
   df.melt.selected.immune <- melt(df.sigs.plusdeconv.selected,
@@ -296,7 +225,7 @@ for (s in unique(df.bottles$Signature)) {
   
   ### Plot immune infiltrates compared:
   my_comparisons <- list(c("Increase","Decrease"))
-  pdf(paste0("plots.tracksig/signatureCorrs/",s,".TMEcompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".TMEcompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.immune, 
                  x = "Direction", y = "value",
                  palette ="npg",
@@ -305,13 +234,15 @@ for (s in unique(df.bottles$Signature)) {
           facet_wrap(~variable, scale="free")+
           theme(axis.text.x=element_blank(),
                 axis.ticks.x = element_blank())+
-          stat_compare_means(comparisons = my_comparisons, label = "p.signif")+
+          stat_compare_means(comparisons = my_comparisons)+
           xlab("")+
           ylab("Infiltration score"))
   dev.off()
+  
+  write.csv(df.melt.selected.immune, file="plots_6/sbs17b.tme.csv")
 
   ### Plot hallmarks compared:
-  pdf(paste0("plots.tracksig/signatureCorrs/",s,".HallmarksCompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".HallmarksCompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.hallmark, 
                  x = "Direction", y = "value",
                  palette ="npg",
@@ -320,19 +251,15 @@ for (s in unique(df.bottles$Signature)) {
           facet_wrap(~variable, scale="free")+
           theme(axis.text.x=element_blank(),
                 axis.ticks.x = element_blank())+
-          stat_compare_means(comparisons = my_comparisons, label = "p.signif")+
+          stat_compare_means(comparisons = my_comparisons)+
           xlab("")+
           ylab("Activity score"))
   dev.off()
-  
-}
+
+write.csv(df.melt.selected.hallmark, file="plots_6/sbs17b.hallmarks.csv")
 
 
-#SBS1 hallmarks, SBS5 TME,SBS17a TME+hallmarks but weak, SBS17b TME, SBS18 TME,SBS40 both
 
-### Iterate for each signature
-for (s in unique(df.bottles$Signature)) {
-  
   df.sigs.pluscbio.selected <- df.sigs.pluscbio[which(df.sigs.pluscbio$Signature == s),]
   
   df.melt.selected.cbio <- melt(df.sigs.pluscbio.selected,
@@ -341,7 +268,7 @@ for (s in unique(df.bottles$Signature)) {
   
   ### Plot immune infiltrates compared:
   my_comparisons <- list(c("Increase","Decrease"))
-  pdf(paste0("plots.tracksig/signatureCorrs/",s,".CBIOcompared.gsva.pdf"),w=10,h=8)
+  pdf(paste0("plots_6/",s,".CBIOcompared.gsva.pdf"),w=10,h=8)
   print(ggviolin(df.melt.selected.cbio, 
                  x = "Direction", y = "value",
                  palette ="npg",
@@ -350,50 +277,11 @@ for (s in unique(df.bottles$Signature)) {
           facet_wrap(~variable, scale="free")+
           theme(axis.text.x=element_blank(),
                 axis.ticks.x = element_blank())+
-          stat_compare_means(comparisons = my_comparisons, label = "p.signif")+
+          stat_compare_means(comparisons = my_comparisons)+
           xlab("")+
           ylab("Activity score"))
   dev.off()
   
-  ## Plot also correlations:
-  my_comparisons <- list(c("Increase","Decrease"))
-  pdf(paste0("plots.tracksig/signatureCorrs/",s,".CBIOscatter.gsva.pdf"),w=10,h=8)
-  print(ggscatter(df.melt.selected.cbio, x = "Change", y = "value",
-                  color = "variable", shape = 21, size = 3, # Points color, shape and size
-                  add = "reg.line",  # Add regressin line
-                  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
-                  conf.int = TRUE, # Add confidence interval
-                  cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
-                  cor.coeff.args = list(method = "pearson", label.x = 0, label.sep = "\n")
-  )+xlab("Signature change at bottleneck")+ylab("Activity score")+
-    facet_wrap(~variable,scale="free",nrow=5))
-  dev.off()
-
-}
-
-### Iterate for each signature
-for (s in unique(df.bottles$Signature)) {
-  df.sigs.plusdeconv.selected <- df.sigs.plusdeconv[which(df.sigs.plusdeconv$Signature == s),]
+  write.csv(df.melt.selected.cbio, file="plots_6/sbs17b.cbio.csv")
   
-  df.melt.selected.immune <- melt(df.sigs.plusdeconv.selected,
-                                  id.vars = c("Sample","TumourID","Signature","Category", 
-                                              "Change", "Direction"))
   
-  ## Plot also correlations:
-  pdf(paste0("plots.tracksig/signatureCorrs2/",s,".CBIOscatter.gsva.pdf"),w=8,h=8)
-  print(ggscatter(df.melt.selected.immune, x = "Change", y = "value",
-                  color = "variable", alpha=0.7,size = 2, # Points color, shape and size
-                  add = "reg.line",  # Add regressin line
-                  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
-                  conf.int = TRUE, # Add confidence interval
-                  cor.coef = TRUE, # Add correlation coefficient. see ?stat_cor
-                  cor.coeff.args = list(method = "pearson", label.x = 0, label.sep = "\n")
-  )+xlab("Signature change at bottleneck")+ylab("Infiltration score")+
-    facet_wrap(~variable,scale="free",nrow=5))
-  dev.off()
-
-  
-}
-
-# What about differences between 1,2,3 subclones? - is it worth looking into this???
-
