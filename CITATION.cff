@@ -1,0 +1,9 @@
+cff-version: 1.0.0
+message: "If you use this code, please cite it as below."
+authors:
+- family-names: "Secrier"
+  given-names: "Maria"
+title: "Mutational signature dynamics shaping the evolution of oesophageal adenocarcinoma."
+version: 1.0
+date-released: 2023-06-21
+url: "https://github.com/secrierlab/Mutational-Signatures-OAC"
